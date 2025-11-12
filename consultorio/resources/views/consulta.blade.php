@@ -38,19 +38,21 @@
     @endif
     <flux:modal name="nuevo-paciente">
         <div class="space-y-6">
-            <div>
-                <flux:heading size="lg">Nuevo paciente</flux:heading>
-                <flux:text class="mt-2">Crea una nueva cuenta para un paciente.</flux:text>
-            </div>
-            <flux:input label="Nombre" name="nombre" placeholder="Nombre del paciente" />
-            <flux:input label="Apellido(s)" name="apellido" placeholder="Apellido(s) del paciente" />
-            <flux:input label="Correo" name="correo" placeholder="correo@ejemplo.com" />
-            <flux:input label="Contraseña" name="password" placeholder="Contraseña" type="password" viewable />
-            <flux:input name="rol" value="paciente" readonly class="hidden"/>
-            <div class="flex">
-                <flux:spacer />
-                <flux:button type="submit" variant="primary">Guardar nuevo paciente</flux:button>
-            </div>
+            <form action="{{ route('guardar.paciente') }}" method="POST">
+                @csrf
+                <div>
+                    <flux:heading size="lg">Nuevo paciente</flux:heading>
+                    <flux:text class="mt-2">Crea una nueva cuenta para un paciente.</flux:text>
+                </div>
+                <flux:input label="Nombre" name="nombre" placeholder="Nombre del paciente" />
+                <flux:input label="Apellido(s)" name="apellido" placeholder="Apellido(s) del paciente" />
+                <flux:input label="Correo" name="email" placeholder="correo@ejemplo.com" />
+                <flux:input label="Contraseña" name="password" placeholder="Contraseña" type="password" viewable />
+                <div class="flex">
+                    <flux:spacer />
+                    <flux:button type="submit" variant="primary">Guardar nuevo paciente</flux:button>
+                </div>
+            </form>
         </div>
     </flux:modal>
 </x-layouts.app.header>
