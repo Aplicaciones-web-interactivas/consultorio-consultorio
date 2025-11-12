@@ -46,7 +46,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="{{ url('/usuarios') }}">Usuarios</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Citas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url('/citas') }}">Citas</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Recetas</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Historial</a></li>
                 </ul>
