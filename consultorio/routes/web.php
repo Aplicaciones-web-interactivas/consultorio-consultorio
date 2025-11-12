@@ -7,8 +7,12 @@ use App\Livewire\Settings\TwoFactor;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CitaController;
 
 Route::resource('usuarios', UserController::class);
+Route::get('/citas', [CitaController::class, 'index'])->name('citas.index');
+    Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
+    Route::delete('/citas/{cita}', [CitaController::class, 'destroy'])->name('citas.destroy');
 
 Route::get('/', function () {
     return view('welcome');
