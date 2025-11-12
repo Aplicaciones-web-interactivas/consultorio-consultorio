@@ -40,27 +40,28 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast to native types.
      *
-     * @return array<string, string>
+     * @var array<string,string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        // 'password' => 'hashed' is supported on newer Laravel versions; keep if using it.
+    ];
 
     /**
-     * Get the user's initials
+     * Get the user's initials (from nombre + apellido).
      */
     public function initials(): string
     {
-        return Str::of($this->name)
-            ->explode(' ')
-            ->take(2)
-            ->map(fn ($word) => Str::substr($word, 0, 1))
-            ->implode('');
+        $first = Str::of($this->nombre)->substr(0, 1)->upper();
+        $second = Str::of($this->apellido)->substr(0, 1)->upper();
+
+        if ($first->isEmpty() && $second->isEmpty()) {
+            // fallback to email
+            return Str::of($this->email)->substr(0, 1)->upper();
+        }
+
+        return $first . $second;
     }
 }
