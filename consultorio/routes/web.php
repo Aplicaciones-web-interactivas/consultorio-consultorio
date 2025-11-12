@@ -34,6 +34,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/importar_excel', [marvin_controller::class, 'importar_excel'])->name('importar_excel');
     Route::post('/import_excel', [marvin_controller::class, 'import_excel'])->name('import_excel');
 
+    // Consulta de pacientes
+    Route::get('/consulta', function () {
+        return view('consulta');
+    });
+
     Route::get('settings/two-factor', TwoFactor::class)
         ->middleware(
             when(
