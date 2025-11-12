@@ -6,6 +6,8 @@ use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\TwoFactor;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
+use App\Http\Controllers\marvin_controller;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,6 +23,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/profile', Profile::class)->name('profile.edit');
     Route::get('settings/password', Password::class)->name('user-password.edit');
     Route::get('settings/appearance', Appearance::class)->name('appearance.edit');
+
+
+    Route::post('/import_excel', [marvin_controller::class, 'import_excel'])->name('import_excel');
 
     Route::get('settings/two-factor', TwoFactor::class)
         ->middleware(
