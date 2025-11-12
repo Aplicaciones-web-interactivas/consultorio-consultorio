@@ -18,12 +18,16 @@ class UsersImport implements ToModel, WithSkipDuplicates
     use Importable;
     public function model(array $row)
     {
+        if (User::where('email', $row[2])->exists()) {
+            return null;
+        }
         return new User([
             'nombre'     => $row[0],
             'apellido'    => $row[1],
-            'rol'    => $row[2],
-            'email'    => $row[3],
-            'password'    => bcrypt($row[4]),
+            'rol'       => 'paciente',
+            'email'    => $row[2],
+            'password'    => bcrypt($row[3]),
+            
         ]);
     }
 }

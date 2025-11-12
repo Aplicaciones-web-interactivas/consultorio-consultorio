@@ -24,7 +24,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/password', Password::class)->name('user-password.edit');
     Route::get('settings/appearance', Appearance::class)->name('appearance.edit');
 
-
+    Route::get('/importar_excel', [marvin_controller::class, 'importar_excel'])->name('importar_excel');
     Route::post('/import_excel', [marvin_controller::class, 'import_excel'])->name('import_excel');
 
     Route::get('settings/two-factor', TwoFactor::class)

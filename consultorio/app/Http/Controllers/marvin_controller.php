@@ -7,28 +7,43 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Models\consultorio;
 
 
-
-
 use Illuminate\Http\Request;
 
 class marvin_controller extends Controller
 {
+    public function importar_excel(){
+        $mis_pacientes = user::whereIn('id', consultorio::where('IdDoctor',Auth()->id())->pluck('IdPaciente'))->get();
+        $subidos = [];
+
+        return view('importar_excel', compact('mis_pacientes', 'subidos'));
+    }
+
+
+
     function import_excel(Request $request){
         Excel::import(new UsersImport, $request->file('file'));
 
         $coleccion = (new UsersImport)->toArray($request->file('file'));
+        $subidos = [];
 
         foreach ($coleccion[0] as $fila) {
-            $user = User::where('email',$fila[3])->first();
-
+            if(consultorio::where('IdDoctor', Auth()->id())->where('IdPaciente', User::where('email', $fila[2])->first()->id)->exists()){
+                continue;
+            }
+            
             $consultorio = new consultorio();
 
             $consultorio->IdDoctor = Auth()->id();
-            $consultorio->IdPaciente = $user->id;
-            $consultorio->save();
+            $consultorio->IdPaciente = User::where('email', $fila[2])->first()->id;
 
-            echo "Usuario importado: " . $fila[3] . " Con el ID ". $user->id . "<br>";
+            $consultorio->save();
+            $subidos[] = User::where('email', $fila[2])->first();
+            
         }
 
+        $mis_pacientes = user::whereIn('id', consultorio::where('IdDoctor',Auth()->id())->pluck('IdPaciente'))->get();
+
+        
+        return view('importar_excel', compact('mis_pacientes', 'subidos'));
     }
 }
