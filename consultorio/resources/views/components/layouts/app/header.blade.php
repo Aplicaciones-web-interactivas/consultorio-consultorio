@@ -51,7 +51,6 @@
             -->
 
             <!-- Desktop User Menu -->
-            <!--
             <flux:dropdown position="top" align="end">
                 <flux:profile
                     class="cursor-pointer"
@@ -94,6 +93,7 @@
                     </form>
                 </flux:menu>
             </flux:dropdown>
+            <!--
             -->
         </flux:header>
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ConsultasController;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -35,9 +36,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/import_excel', [marvin_controller::class, 'import_excel'])->name('import_excel');
 
     // Consulta de pacientes
-    Route::get('/consulta', function () {
-        return view('consulta');
-    });
+
+    Route::get('/consulta', [ConsultasController::class, 'index'])->name('consulta');
+    Route::post('/receta', [ConsultasController::class, 'guardarReceta'])->name('guardar.receta');
 
     Route::get('settings/two-factor', TwoFactor::class)
         ->middleware(
