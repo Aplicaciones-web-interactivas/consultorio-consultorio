@@ -37,6 +37,7 @@ class User extends Authenticatable
         'two_factor_secret',
         'two_factor_recovery_codes',
         'remember_token',
+        'historial',
     ];
 
     /**
@@ -63,5 +64,10 @@ class User extends Authenticatable
         }
 
         return $first . $second;
+    }
+
+    public function historial()
+    {
+        return $this->hasMany(Historial::class, 'IdPaciente', 'id');
     }
 }
