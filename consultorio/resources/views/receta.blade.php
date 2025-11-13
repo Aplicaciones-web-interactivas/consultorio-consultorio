@@ -7,9 +7,9 @@
 </head>
 <body>
     <h2> Dr. {{ $doctor->nombre }} {{$doctor->apellido}} </h2>
-    <h2> {{ $paciente->nombre }} {{$paciente->apellido}} </h2>
+    <h3> {{ $paciente->nombre }} {{$paciente->apellido}} </h3>
     <hr>
-    <p> Fecha: {{ $receta->fecha }} </p>
+    <p> Fecha: {{ $receta->Fecha }} </p>
     <p>
         {{ $receta->Medicamentos }}
     </p>
