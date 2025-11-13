@@ -13,16 +13,16 @@ class CitaController extends Controller
     public function index()
     {
         $paciente = Auth::user();
-        
+
         // Obtener la cita activa del paciente (la más reciente)
         $cita = Cita::where('IdPaciente', $paciente->id)
                     ->orderBy('Fecha', 'desc')
                     ->orderBy('Hora', 'desc')
                     ->first();
-        
+
         // Obtener todos los doctores para el formulario
         $doctores = User::where('rol', 'doctor')->get();
-        
+
         return view('citas.index', compact('cita', 'doctores'));
     }
 
@@ -60,5 +60,46 @@ class CitaController extends Controller
         $cita->delete();
 
         return redirect()->route('citas.index')->with('success', 'Cita cancelada exitosamente');
+    }
+
+
+    public function indexDoctor(Request $request)
+    {
+        $doctor = Auth::user();
+
+        $query = Cita::where('IdDoctor', $doctor->id)
+            ->with('paciente');
+
+        if ($request->has('fecha') && $request->fecha != '') {
+            $query->whereDate('Fecha', $request->fecha);
+        }
+
+        $citas = $query->orderBy('Fecha', 'asc')
+            ->orderBy('Hora', 'asc')
+            ->get();
+
+        return view('citas.doctor', compact('citas'));
+    }
+
+    public function confirmar(Cita $cita)
+    {
+        if ($cita->IdDoctor !== Auth::id()) {
+            abort(403, 'No autorizado');
+        }
+
+        $cita->update(['Confirmacion' => true]);
+
+        return redirect()->back()->with('success', 'Cita confirmada exitosamente');
+    }
+
+    public function cancelarDoctor(Cita $cita)
+    {
+        if ($cita->IdDoctor !== Auth::id()) {
+            abort(403, 'No autorizado');
+        }
+
+        $cita->delete();
+
+        return redirect()->back()->with('success', 'Cita cancelada exitosamente');
     }
 }
