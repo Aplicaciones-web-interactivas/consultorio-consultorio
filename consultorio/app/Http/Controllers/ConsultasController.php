@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Models\Consultorio;
 use App\Models\Receta;
 
+use Dompdf\Dompdf;
+
 /**
  * Controlador para las recetas de los pacientes
  * ~ Jacobo Rodriguez Torres
@@ -36,10 +38,32 @@ class ConsultasController extends Controller
         $receta->Fecha = $request->fecha;
         $receta->save();
 
-        if ($request->imprimible){
-            // Imprimir receta.
+        if ($request->descargar){
+            ConsultasController::imprimirReceta($receta);
         }
 
         return redirect()->back()->with(['msg' => 'La receta fue guardada correctamente']);
+    }
+
+    public function imprimirReceta($receta){
+        $doctor = User::find($receta->IdDoctor);
+        $paciente = User::find($receta->IdPaciente);
+        $dompdf = new Dompdf();
+        $html = view('receta', compact('receta', 'doctor', 'paciente'));
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        return $dompdf->stream('receta.pdf');
+    }
+
+    public function generatePDF($id){
+        $task = Task::find($id);
+        $dompdf = new Dompdf();
+        #$html = "<h1>" . $task->name . "</h1>";
+        $html = view('task', compact('task'));
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        return $dompdf->stream('tarea-' . $task->id .'.pdf');
     }
 }
