@@ -66,14 +66,14 @@
                                 <a class="nav-link" href="#">Recetas</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Historial</a>
+                                <a class="nav-link" href="{{ url('/historial') }}">Historial</a>
                             </li>
                         @elseif(Auth::user()->rol == 'paciente')
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('citas.index') }}">Agendar Cita</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Mi Historial</a>
+                                <a class="nav-link" href="{{ url('/historial') }}">Mi Historial</a>
                             </li>
                         @endif
 
