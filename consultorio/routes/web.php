@@ -10,6 +10,7 @@ use App\Http\Controllers\marvin_controller;
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CitaController;
+use App\Http\Controllers\HistorialController;
 
 Route::resource('usuarios', UserController::class);
 Route::get('/citas', [CitaController::class, 'index'])->name('citas.index');
@@ -33,6 +34,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/importar_excel', [marvin_controller::class, 'importar_excel'])->name('importar_excel');
     Route::post('/import_excel', [marvin_controller::class, 'import_excel'])->name('import_excel');
+
+    Route::get('/historial', [HistorialController::class, 'index'])->name('historial.index');
+    Route::get('/historial/{paciente}', [HistorialController::class, 'show'])->name('historial.show');
+    Route::put('/historial/{historial}', [HistorialController::class, 'update'])->name('historial.actualizar');
+    Route::delete('/historial/{historial}/image', [HistorialController::class, 'deleteImage'])->name('historial.eliminarImagen');
 
     Route::get('settings/two-factor', TwoFactor::class)
         ->middleware(
