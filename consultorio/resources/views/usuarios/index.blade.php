@@ -6,6 +6,12 @@
 
     <!-- Botón Crear -->
     <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#crearModal">Nuevo Usuario</button>
+    <form method="GET" action="{{ route('importar_excel') }}" style="display: inline;">
+        @csrf
+        <button type="submit" class="btn btn-success mb-3">
+            Ir a Importar Excel
+        </button>
+    </form>
 
     <!-- Tabla -->
     <table class="table table-striped">

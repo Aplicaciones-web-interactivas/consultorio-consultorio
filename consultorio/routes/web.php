@@ -8,7 +8,7 @@ use App\Livewire\Settings\TwoFactor;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use App\Http\Controllers\marvin_controller;
-
+use App\Http\Controllers\HistorialController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CitaController;
 
@@ -16,6 +16,10 @@ Route::resource('usuarios', UserController::class);
 Route::get('/citas', [CitaController::class, 'index'])->name('citas.index');
     Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
     Route::delete('/citas/{cita}', [CitaController::class, 'destroy'])->name('citas.destroy');
+
+Route::get('/doctor/citas', [CitaController::class, 'indexDoctor'])->name('doctor.citas');
+Route::patch('/doctor/citas/{cita}/confirmar', [CitaController::class, 'confirmar'])->name('doctor.citas.confirmar');
+Route::delete('/doctor/citas/{cita}/cancelar', [CitaController::class, 'cancelarDoctor'])->name('doctor.citas.cancelar');
 
 Route::get('/', function () {
     return view('welcome');
@@ -41,6 +45,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/crearPaciente', [UserController::class, 'creaPaciente'])->name('guardar.paciente');
 
+    Route::get('/historial', [HistorialController::class, 'index'])->name('historial.index');
+    Route::get('/historial/{paciente}', [HistorialController::class, 'show'])->name('historial.show');
+    Route::put('/historial/{historial}', [HistorialController::class, 'update'])->name('historial.actualizar');
+    Route::delete('/historial/{historial}/image', [HistorialController::class, 'deleteImage'])->name('historial.eliminarImagen');
     Route::get('settings/two-factor', TwoFactor::class)
         ->middleware(
             when(
