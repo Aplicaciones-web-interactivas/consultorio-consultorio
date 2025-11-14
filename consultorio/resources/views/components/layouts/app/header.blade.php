@@ -8,17 +8,23 @@
             <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
 
             <a href="{{ route('dashboard') }}" class="ms-2 me-5 flex items-center space-x-2 rtl:space-x-reverse lg:ms-0" wire:navigate>
-                <x-app-logo />
+                Consultorio
             </a>
 
+            <flux:spacer/>
+
             <flux:navbar class="-mb-px max-lg:hidden">
-                <flux:navbar.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
-                    {{ __('Dashboard') }}
+                <flux:navbar.item icon="users" :href="url('/usuarios')" :current="request()->routeIs('usuarios')" wire:navigate>
+                    {{ __('Usuarios') }}
+                </flux:navbar.item>
+                <flux:navbar.item icon="calendar" :href="route('citas.index')" :current="request()->routeIs('citas.index')" wire:navigate>
+                    {{ __('Citas') }}
                 </flux:navbar.item>
             </flux:navbar>
 
-            <flux:spacer />
 
+            <!--
+            <flux:spacer />
             <flux:navbar class="me-1.5 space-x-0.5 rtl:space-x-reverse py-0!">
                 <flux:tooltip :content="__('Search')" position="bottom">
                     <flux:navbar.item class="!h-10 [&>div>svg]:size-5" icon="magnifying-glass" href="#" :label="__('Search')" />
@@ -29,7 +35,7 @@
                         icon="folder-git-2"
                         href="https://github.com/laravel/livewire-starter-kit"
                         target="_blank"
-                        :label="__('Repository')"
+                        :label="__('Usuarios')"
                     />
                 </flux:tooltip>
                 <flux:tooltip :content="__('Documentation')" position="bottom">
@@ -42,6 +48,7 @@
                     />
                 </flux:tooltip>
             </flux:navbar>
+            -->
 
             <!-- Desktop User Menu -->
             <flux:dropdown position="top" align="end">
@@ -86,6 +93,8 @@
                     </form>
                 </flux:menu>
             </flux:dropdown>
+            <!--
+            -->
         </flux:header>
 
         <!-- Mobile Menu -->
