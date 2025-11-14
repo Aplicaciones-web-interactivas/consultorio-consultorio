@@ -32,10 +32,11 @@ class UsersImport implements ToModel, WithSkipDuplicates
 
             ]);
         }
+        //admin solo puede subir doctores
         return new User([
             'nombre'     => $row[0],
             'apellido'    => $row[1],
-            'rol'       => $row[4],
+            'rol'       => 'doctor',
             'email'    => $row[2],
             'password'    => bcrypt($row[3]),
 
