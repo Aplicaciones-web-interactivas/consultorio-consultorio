@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ConsultasController;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -37,6 +38,13 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/importar_excel', [marvin_controller::class, 'importar_excel'])->name('importar_excel');
     Route::post('/import_excel', [marvin_controller::class, 'import_excel'])->name('import_excel');
+
+    // Consulta de pacientes
+    Route::get('/consulta', [ConsultasController::class, 'index'])->name('consulta');
+    Route::post('/receta', [ConsultasController::class, 'guardarReceta'])->name('guardar.receta');
+
+    Route::post('/crearPaciente', [UserController::class, 'creaPaciente'])->name('guardar.paciente');
+
     Route::get('/historial', [HistorialController::class, 'index'])->name('historial.index');
     Route::get('/historial/{paciente}', [HistorialController::class, 'show'])->name('historial.show');
     Route::put('/historial/{historial}', [HistorialController::class, 'update'])->name('historial.actualizar');
