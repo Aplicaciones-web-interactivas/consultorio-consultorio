@@ -10,10 +10,10 @@ use Maatwebsite\Excel\Concerns\WithSkipDuplicates;
 class UsersImport implements ToModel, WithSkipDuplicates
 {
     /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
+     * @param array $row
+     *
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
 
     use Importable;
     public function model(array $row)
@@ -21,13 +21,24 @@ class UsersImport implements ToModel, WithSkipDuplicates
         if (User::where('email', $row[2])->exists()) {
             return null;
         }
+
+        if (auth()->user()->rol == 'doctor') {
+            return new User([
+                'nombre'     => $row[0],
+                'apellido'    => $row[1],
+                'rol'       => 'Paciente',
+                'email'    => $row[2],
+                'password'    => bcrypt($row[3]),
+
+            ]);
+        }
         return new User([
             'nombre'     => $row[0],
             'apellido'    => $row[1],
-            'rol'       => 'paciente',
+            'rol'       => $row[4],
             'email'    => $row[2],
             'password'    => bcrypt($row[3]),
-            
+
         ]);
     }
 }
