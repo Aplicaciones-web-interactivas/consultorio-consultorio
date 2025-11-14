@@ -1,0 +1,140 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Cita;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\CitaCancelada;
+use App\Mail\CitaConfirmada;
+
+class CitaController extends Controller
+{
+    // Mostrar la vista de citas del paciente
+    public function index()
+    {
+        $paciente = Auth::user();
+
+        // Obtener la cita activa del paciente (la más reciente)
+        $cita = Cita::where('IdPaciente', $paciente->id)
+                    ->orderBy('Fecha', 'desc')
+                    ->orderBy('Hora', 'desc')
+                    ->first();
+
+        // Obtener todos los doctores para el formulario
+        $doctores = User::where('rol', 'doctor')->get();
+
+        return view('citas.index', compact('cita', 'doctores'));
+    }
+
+    // Crear nueva cita
+    public function store(Request $request)
+    {
+        $request->validate([
+            'IdDoctor' => 'required|exists:users,id',
+            'Fecha' => 'required|date|after_or_equal:today',
+            'Hora' => 'required',
+        ], [
+            'Fecha.after_or_equal' => 'La fecha debe ser hoy o posterior',
+            'IdDoctor.required' => 'Debes seleccionar un doctor',
+        ]);
+
+        Cita::create([
+            'IdPaciente' => Auth::id(),
+            'IdDoctor' => $request->IdDoctor,
+            'Fecha' => $request->Fecha,
+            'Hora' => $request->Hora,
+            'Confirmacion' => false, // Pendiente por defecto
+        ]);
+
+        return redirect()->route('citas.index')->with('success', 'Cita agendada exitosamente');
+    }
+
+    // Cancelar cita
+    public function destroy(Cita $cita)
+    {
+        // Verificar que la cita pertenece al usuario actual
+        if ($cita->IdPaciente !== Auth::id()) {
+            abort(403, 'No autorizado');
+        }
+
+        /*Codigo de Envio de correos - Cesar rdz*/
+        try{
+            $paciente = User::find($cita->IdPaciente);
+            $doctor = User::find($cita->IdDoctor);
+            
+            Mail::to($paciente->email)->send(new CitaCancelada($cita, $paciente, $doctor));
+            $cita->delete();
+
+            return redirect()->route('citas.index')->with('success', 'Cita cancelada exitosamente y notificacion enviada.');
+        }catch(\Exception $e){
+            $cita->delete();
+            return redirect()->route('citas.index')->with('warning', 'Cita cancelada, pero hubo un error al enviar el correo.');
+        }
+        /*Fin codigo correo Cesar rdz*/
+    }
+
+
+    public function indexDoctor(Request $request)
+    {
+        $doctor = Auth::user();
+
+        $query = Cita::where('IdDoctor', $doctor->id)
+            ->with('paciente');
+
+        if ($request->has('fecha') && $request->fecha != '') {
+            $query->whereDate('Fecha', $request->fecha);
+        }
+
+        $citas = $query->orderBy('Fecha', 'asc')
+            ->orderBy('Hora', 'asc')
+            ->get();
+
+        return view('citas.doctor', compact('citas'));
+    }
+
+    public function confirmar(Cita $cita)
+    {
+        if ($cita->IdDoctor !== Auth::id()) {
+            abort(403, 'No autorizado');
+        }
+
+        /*Codigo de Envio de correos - Cesar rdz*/
+        try {
+            $paciente = User::find($cita->IdPaciente);
+            $doctor = User::find($cita->IdDoctor);
+            
+            $cita->update(['Confirmacion' => true]);
+            Mail::to($paciente->email)->send(new CitaConfirmada($cita, $paciente, $doctor));
+
+            return redirect()->back()->with('success', 'Cita confirmada exitosamente y notificación enviada.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('warning', 'Cita confirmada, pero hubo un error al enviar la notificación.');
+        }
+        /*Fin codigo correo Cesar rdz*/
+    }
+
+    public function cancelarDoctor(Cita $cita)
+    {
+        if ($cita->IdDoctor !== Auth::id()) {
+            abort(403, 'No autorizado');
+        }
+
+        /*Codigo de Envio de correos - Cesar rdz*/
+        try {
+            $paciente = User::find($cita->IdPaciente);
+            $doctor = User::find($cita->IdDoctor);
+            
+            Mail::to($paciente->email)->send(new CitaCancelada($cita, $paciente, $doctor));
+            $cita->delete();
+
+            return redirect()->back()->with('success', 'Cita cancelada exitosamente y notificación enviada.');
+        } catch (\Exception $e) {
+            $cita->delete();
+            return redirect()->back()->with('warning', 'Cita cancelada, pero hubo un error al enviar la notificación.');
+        }
+        /*Fin codigo correo Cesar rdz*/
+    }
+}
