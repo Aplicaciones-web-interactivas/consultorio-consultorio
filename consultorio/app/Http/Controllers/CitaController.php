@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\CitaCancelada;
+use App\Mail\CitaConfirmada;
 
 class CitaController extends Controller
 {
@@ -100,9 +101,19 @@ class CitaController extends Controller
             abort(403, 'No autorizado');
         }
 
-        $cita->update(['Confirmacion' => true]);
+        /*Codigo de Envio de correos - Cesar rdz*/
+        try {
+            $paciente = User::find($cita->IdPaciente);
+            $doctor = User::find($cita->IdDoctor);
+            
+            $cita->update(['Confirmacion' => true]);
+            Mail::to($paciente->email)->send(new CitaConfirmada($cita, $paciente, $doctor));
 
-        return redirect()->back()->with('success', 'Cita confirmada exitosamente');
+            return redirect()->back()->with('success', 'Cita confirmada exitosamente y notificación enviada.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('warning', 'Cita confirmada, pero hubo un error al enviar la notificación.');
+        }
+        /*Fin codigo correo Cesar rdz*/
     }
 
     public function cancelarDoctor(Cita $cita)
@@ -111,8 +122,19 @@ class CitaController extends Controller
             abort(403, 'No autorizado');
         }
 
-        $cita->delete();
+        /*Codigo de Envio de correos - Cesar rdz*/
+        try {
+            $paciente = User::find($cita->IdPaciente);
+            $doctor = User::find($cita->IdDoctor);
+            
+            Mail::to($paciente->email)->send(new CitaCancelada($cita, $paciente, $doctor));
+            $cita->delete();
 
-        return redirect()->back()->with('success', 'Cita cancelada exitosamente');
+            return redirect()->back()->with('success', 'Cita cancelada exitosamente y notificación enviada.');
+        } catch (\Exception $e) {
+            $cita->delete();
+            return redirect()->back()->with('warning', 'Cita cancelada, pero hubo un error al enviar la notificación.');
+        }
+        /*Fin codigo correo Cesar rdz*/
     }
 }
