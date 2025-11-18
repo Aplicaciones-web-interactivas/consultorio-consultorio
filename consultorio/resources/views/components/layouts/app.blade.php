@@ -118,7 +118,7 @@
     </nav>
 
     <!-- Contenido principal -->
-    <main class="py-4">
+    <main class="py-4 min-vh-100">
         @yield('content')
     </main>
 
