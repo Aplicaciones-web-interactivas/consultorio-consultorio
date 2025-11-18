@@ -54,7 +54,6 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
                     @auth
-
                         @if (Auth::user()->rol == 'doctor')
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('doctor.citas') }}">Mis Citas</a>
@@ -67,6 +66,9 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url('/historial') }}">Historial</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('consulta') }}">Consulta</a>
                             </li>
                         @elseif(Auth::user()->rol == 'paciente')
                             <li class="nav-item">
