@@ -82,26 +82,23 @@
                     @endauth
                 </ul>
 
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center">
                     @auth
                         <li class="nav-item">
                             <span class="navbar-text text-white me-3">
                                 Hola, {{ Auth::user()->nombre }} ({{ Auth::user()->rol }})
                             </span>
                         </li>
-
-                        <div class="vr bg-white opacity-25 me-3 d-none d-lg-block"></div>
-
+                        <li class="nav-item d-none d-lg-block">
+                            <div class="vr bg-white opacity-25 me-3" style="height: 24px;"></div>
+                        </li>
                         <li class="nav-item">
-                            <form method="POST" action="{{ route('logout') }}">
+                            <form method="POST" action="{{ route('logout') }}" class="m-0">
                                 @csrf
-                                <a class="nav-link" href="{{ route('logout') }}"
-                                    onclick="event.preventDefault();
-                                            this.closest('form').submit();">
-
+                                <a class="nav-link d-flex align-items-center" href="{{ route('logout') }}"
+                                    onclick="event.preventDefault(); this.closest('form').submit();">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16"
-                                        style="margin-top: -2px;">
+                                        fill="currentColor" class="bi bi-box-arrow-right me-2" viewBox="0 0 16 16">
                                         <path fill-rule="evenodd"
                                             d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2.1a.5.5 0 0 0 1 0v-2.1A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2.1a.5.5 0 0 0-1 0v2.1z" />
                                         <path fill-rule="evenodd"
