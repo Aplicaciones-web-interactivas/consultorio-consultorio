@@ -51,19 +51,9 @@ class ConsultasController extends Controller
         $dompdf = new Dompdf();
         $html = view('receta', compact('receta', 'doctor', 'paciente'));
         $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->setPaper('A5', 'portrait');
         $dompdf->render();
-        return $dompdf->stream('receta.pdf');
-    }
-
-    public function generatePDF($id){
-        $task = Task::find($id);
-        $dompdf = new Dompdf();
-        #$html = "<h1>" . $task->name . "</h1>";
-        $html = view('task', compact('task'));
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
-        return $dompdf->stream('tarea-' . $task->id .'.pdf');
+        $dompdf->stream('receta.pdf');
+        return None;
     }
 }
